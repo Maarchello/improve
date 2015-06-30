@@ -1,0 +1,17 @@
+*{margin:0px; padding:0px;}
+body{background:#f5f5f5; font-family:'Open Sans',sans-serif,Tahoma; font-size:15px;}
+h1{font-size:20px; padding:5px 10px;}
+input{font-size:15px; outline:none;}
+table{border-collapse:collapse;}
+td{border-bottom: 1px solid black}
+#container{padding:10px;}
+#filter{padding:5px;}
+#inputSome{color: darkorange;}
+.filter_inner{display:inline-block; padding:5px; vertical-align:bottom;}
+.filter_input{padding:4px;}
+.filter_button{padding:3px;}
+
+#result{padding:10px;}
+#result_table{border-bottom:solid #aaa 1px;}
+#result_table th{background:#ddd; border:solid #aaa 1px;padding:7px 10px;}
+#result_table td{border-left:solid #aaa 1px; border-right:solid #aaa 1px; padding:7px 10px;}
