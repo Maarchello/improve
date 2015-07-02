@@ -24,89 +24,19 @@ public class Controller extends HttpServlet {
         Search search = new Search();
         String category = req.getParameter("category").trim();
         String name = req.getParameter("name").trim();
-        String priceMin = req.getParameter("priceFrom").trim();
-        String priceMax = req.getParameter("priceTo").trim();
-        Integer priceFrom=checkPrice(priceMin);
-        Integer priceTo=checkPrice(priceMax);
+        String priceFrom = req.getParameter("priceFrom").trim();
+        String priceTo = req.getParameter("priceTo").trim();
+        Integer priceMin=checkPrice(priceFrom);
+        Integer priceMax=checkPrice(priceTo);
 
-
-        if (category.isEmpty() && name.isEmpty() && priceFrom==null && priceTo==null){
-            req.setAttribute("havenot", "Введите хотя бы один критерий для поиска");
-            req.getRequestDispatcher("/index.jsp").forward(req,resp);
-            //Поиск по максимально допустимой цене
-        }else if (category.isEmpty() && name.isEmpty() && priceFrom==null && priceTo!=null){
-            List<Prod> list = search.getByPriceMax(priceTo);
-            req.setAttribute("list", list);
-            req.getRequestDispatcher("/index.jsp").forward(req,resp);
-            //Поиск по минимально допустимой цене
-        }else if (category.isEmpty() && name.isEmpty() && priceFrom!=null && priceTo==null){
-            List<Prod> list = search.getByPriceMin(priceFrom);
-            req.setAttribute("list", list);
-            req.getRequestDispatcher("/index.jsp").forward(req,resp);
-            //Поиск по заданным критериям цен
-        }else if (category.isEmpty() && name.isEmpty() && priceFrom!=null && priceTo!=null){
-            List<Prod> list = search.getByPrice(priceFrom, priceTo);
-            req.setAttribute("list", list);
-            req.getRequestDispatcher("/index.jsp").forward(req,resp);
-            //Поиск по наименованию
-        }else if (category.isEmpty() && !name.isEmpty() && priceFrom==null && priceTo==null){
-            List<Prod> list = search.getByName(name);
-            req.setAttribute("list", list);
-            req.getRequestDispatcher("/index.jsp").forward(req,resp);
-            //Поиск по наименованию и максимально допустимой цене
-        }else if (category.isEmpty() && !name.isEmpty() && priceFrom==null && priceTo!=null){
-            List<Prod> list = search.getByNameAndPriceMax(name, priceTo);
-            req.setAttribute("list", list);
-            req.getRequestDispatcher("/index.jsp").forward(req,resp);
-            //Поиск по наименованию и минимально допустимой цене
-        }else if (category.isEmpty() && !name.isEmpty() && priceFrom!=null && priceTo==null){
-            List<Prod> list = search.getByNameAndPriceMin(name, priceFrom);
-            req.setAttribute("list", list);
-            req.getRequestDispatcher("/index.jsp").forward(req,resp);
-            //Поиск по наименованию и заданным критериям цен
-        }else if (category.isEmpty() && !name.isEmpty() && priceFrom!=null && priceTo!=null){
-            List<Prod> list = search.getByNameAndPrice(name, priceFrom, priceTo);
-            req.setAttribute("list", list);
-            req.getRequestDispatcher("/index.jsp").forward(req,resp);
-            //Поиск по категории
-        }else if (!category.isEmpty() && name.isEmpty() && priceFrom==null && priceTo==null){
-            List<Prod> list = search.getByCat(category);
-            req.setAttribute("list", list);
-            req.getRequestDispatcher("/index.jsp").forward(req,resp);
-            //Поиск по категории и максимально допустимой цене
-        }else if (!category.isEmpty() && name.isEmpty() && priceFrom==null && priceTo!=null){
-            List<Prod> list = search.getByCatAndPriceMax(category, priceTo);
-            req.setAttribute("list", list);
-            req.getRequestDispatcher("/index.jsp").forward(req,resp);
-            //Поиск по категории и минимально допустимой цене
-        }else if (!category.isEmpty() && name.isEmpty() && priceFrom!=null && priceTo==null){
-            List<Prod> list = search.getByCatAndPriceMin(category, priceFrom);
-            req.setAttribute("list", list);
-            req.getRequestDispatcher("/index.jsp").forward(req,resp);
-            //Поиск по категории и заданным критериям цен
-        }else if (!category.isEmpty() && name.isEmpty() && priceFrom!=null && priceTo!=null){
-            List<Prod> list = search.getByCatAndPrice(category, priceFrom, priceTo);
-            req.setAttribute("list", list);
-            req.getRequestDispatcher("/index.jsp").forward(req,resp);
-            //Поиск по категории и наименованию
-        }else if (!category.isEmpty() && !name.isEmpty() && priceFrom==null && priceTo==null){
-            List<Prod> list = search.getByCatAndName(category, name);
-            req.setAttribute("list", list);
-            req.getRequestDispatcher("/index.jsp").forward(req,resp);
-            //Поиск по категории, наименованию и максимально допустимой цене
-        }else if (!category.isEmpty() && !name.isEmpty() && priceFrom==null && priceTo!=null){
-            List<Prod> list = search.getByCatAndNameAndPriceMax(category, name, priceTo);
-            req.setAttribute("list", list);
-            req.getRequestDispatcher("/index.jsp").forward(req,resp);
-            //Поиск по категории, наименованию и минимально допустимой цене
-        }else if (!category.isEmpty() && !name.isEmpty() && priceFrom!=null && priceTo==null){
-            List<Prod> list = search.getByCatAndNameAndPriceMin(category,name,priceFrom);
-            req.setAttribute("list", list);
-            req.getRequestDispatcher("/index.jsp").forward(req,resp);
-            //Поиск по всем критериям
-        }else if (!category.isEmpty() && !name.isEmpty() && priceFrom!=null && priceTo!=null){
-            List<Prod> list = search.getByAllValues(category,name,priceFrom,priceTo);
-            req.setAttribute("list", list);
+        try{
+            if(category.isEmpty() && name.isEmpty() && priceMin==null && priceMax==null){
+                req.setAttribute("havenot", "Введите хотя бы один критерий");
+            }else {
+                List<Prod> list = search.get(category, name, priceMin, priceMax);
+                req.setAttribute("list", list);
+            }
+        }finally {
             req.getRequestDispatcher("/index.jsp").forward(req,resp);
         }
     }

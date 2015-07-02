@@ -51,8 +51,6 @@
           <th>Цена</th>
         </tr>
         <c:forEach var="prod" items="${list}">
-
-
         <tr>
           <td><c:out value="${prod.cat.name}"/></td>
           <td><c:out value="${prod.name}"/></td>
