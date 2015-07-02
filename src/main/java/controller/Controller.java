@@ -29,16 +29,18 @@ public class Controller extends HttpServlet {
         Integer priceMin=checkPrice(priceFrom);
         Integer priceMax=checkPrice(priceTo);
 
-        try{
+
             if(category.isEmpty() && name.isEmpty() && priceMin==null && priceMax==null){
                 req.setAttribute("havenot", "Введите хотя бы один критерий");
+                req.getRequestDispatcher("/index.jsp").forward(req,resp);
             }else {
                 List<Prod> list = search.get(category, name, priceMin, priceMax);
                 req.setAttribute("list", list);
+                req.getRequestDispatcher("/index.jsp").forward(req,resp);
             }
-        }finally {
-            req.getRequestDispatcher("/index.jsp").forward(req,resp);
-        }
+
+
+
     }
 
     private Integer checkPrice(String value){

@@ -13,6 +13,41 @@ public class Search {
     public EntityManager entityManager = Persistence.createEntityManagerFactory("FIG").createEntityManager();
 
     public List get(String category, String name, Integer priceMin, Integer priceMax){
+        if (!category.isEmpty()){  //1
+            if (!name.isEmpty()){
+                if (priceMin!=null){
+                    if (priceMax!=null){
+                        return getByAllValues(category,name,priceMin,priceMax);
+                    }else return getByCatAndNameAndPriceMin(category,name,priceMin);
+                }else if (priceMax!=null){
+                    return getByCatAndNameAndPriceMax(category,name,priceMax);
+                }
+                return getByCatAndName(category,name);
+            }else if(priceMin!=null){
+                if (priceMax!=null){
+                    return getByCatAndPrice(category,priceMin,priceMax);
+                }else return getByCatAndPriceMin(category,priceMin);
+            } else return getByCat(category);
+        }else if (!name.isEmpty()){  //2
+            if (priceMin!=null){
+                if (priceMax!=null){
+                    return getByNameAndPrice(name,priceMin,priceMax);
+                }
+                return getByNameAndPriceMin(name,priceMin);
+            }else if (priceMax!=null){
+                return getByNameAndPriceMax(name,priceMax);
+            }return getByName(name);
+
+        }else if (priceMin!=null){ //3
+            if(priceMax!=null){
+                return getByPrice(priceMin, priceMax);
+            }
+            return getByPriceMin(priceMin);
+        }else if (priceMax!=null){ //4
+           return getByPriceMax(priceMax);
+        }
+
+        /*
         if(category.isEmpty() && name.isEmpty() && priceMin==null && priceMax!=null){
             return getByPriceMax(priceMax);
         }else if (category.isEmpty() && name.isEmpty() && priceMin!=null && priceMax==null){
@@ -43,7 +78,7 @@ public class Search {
             return getByCatAndNameAndPriceMin(category,name,priceMin);
         }else if (!category.isEmpty() && !name.isEmpty() && priceMin!=null && priceMax!=null) {
             return getByAllValues(category, name, priceMin, priceMax);
-        }
+        }*/
         return null;
     }
 
