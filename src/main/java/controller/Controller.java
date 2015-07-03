@@ -30,6 +30,8 @@ public class Controller extends HttpServlet {
         Integer priceMax=checkPrice(priceTo);
 
 
+
+
             if(category.isEmpty() && name.isEmpty() && priceMin==null && priceMax==null){
                 req.setAttribute("havenot", "Введите хотя бы один критерий");
                 req.getRequestDispatcher("/index.jsp").forward(req,resp);
@@ -48,7 +50,7 @@ public class Controller extends HttpServlet {
         try{
             price= Integer.parseInt(value);
         }catch (NumberFormatException e){
-            price = null;
+            price=null;
         }
         return price;
     }

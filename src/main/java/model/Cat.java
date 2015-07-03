@@ -39,4 +39,9 @@ public class Cat {
     public void setSet(List<Prod> set) {
         this.set = set;
     }
+
+    @Override
+    public String toString() {
+        return ""+name+"";
+    }
 }
