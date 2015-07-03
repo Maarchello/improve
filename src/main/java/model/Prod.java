@@ -47,8 +47,4 @@ public class Prod {
         this.price = price;
     }
 
-    @Override
-    public String toString() {
-        return "PROD:" + cat + " "+ name + " " + price + "";
-    }
 }
