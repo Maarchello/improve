@@ -1,75 +1,49 @@
 package service;
 
 
+
+
+
+import org.apache.commons.lang3.StringUtils;
 import model.Prod;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import java.util.*;
 
 public class Search {
 
     public EntityManager entityManager = Persistence.createEntityManagerFactory("FIG").createEntityManager();
+    public List<Prod> get(String category, String name, Integer priceMin, Integer priceMax){
+        Map<String, Object> paramaterMap = new HashMap<String, Object>();
+        List<String> whereCause = new ArrayList<String>();
 
-    public List get(String category, String name, Integer priceMin, Integer priceMax){
-        List<Prod> list= new ArrayList<Prod>();
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("select p from Prod p ");
 
         if (!category.isEmpty()){
-            List<Prod> listCat = getByCat(category);
-            if(list.isEmpty()) list.addAll(listCat);
-            else list.retainAll(listCat);
+            whereCause.add(" p.cat.name =:category ");
+            paramaterMap.put("category", category);
         }
         if (!name.isEmpty()){
-            List<Prod> listName = getByName(name);
-            if(list.isEmpty()) list.addAll(listName);
-            else list.retainAll(listName);
+            whereCause.add(" p.name =:name ");
+            paramaterMap.put("name", name);
         }
         if (priceMin!=null){
-            List<Prod> listMin = getByPriceMin(priceMin);
-            if(list.isEmpty()) list.addAll(listMin);
-            else list.retainAll(listMin);
+            whereCause.add(" p.price>=:priceMin ");
+            paramaterMap.put("priceMin", priceMin);
         }
         if (priceMax!=null){
-            List<Prod> listMax = getByPriceMax(priceMax);
-            if(list.isEmpty()) list.addAll(listMax);
-            else list.retainAll(listMax);
+            whereCause.add("p.price<=:priceMax  ");
+            paramaterMap.put("priceMax", priceMax);
         }
+        queryBuilder.append(" where " + StringUtils.join(whereCause, " and "));
+        Query jpaQuery = entityManager.createQuery(queryBuilder.toString());
 
-        return list;
+        for(String key : paramaterMap.keySet()) {
+            jpaQuery.setParameter(key, paramaterMap.get(key));
+        }
+        return  jpaQuery.getResultList();
     }
-
-
-
-    //Поиск по максимально допустимой цене
-    private List getByPriceMax(Integer priceMax){
-        return entityManager.createQuery("select e from Prod e where e.price<= :priceMax")
-                .setParameter("priceMax", priceMax)
-                .getResultList();
-    }
-
-    //Поиск по минимально допустимой цене
-    private List getByPriceMin(Integer priceMin){
-        return entityManager.createQuery("select e from Prod e where e.price>= :priceMin")
-                .setParameter("priceMin", priceMin)
-                .getResultList();
-    }
-
-
-    //Поиск по наименованию
-    public List getByName(String name){
-        return entityManager.createQuery("select e from Prod e where e.name= :name")
-                .setParameter("name", name)
-                .getResultList();
-    }
-
-
-    //Поиск по категории
-    private List getByCat(String category){
-        return entityManager.createQuery("select p from Prod p where p.cat.name= :cat")
-                .setParameter("cat", category)
-                .getResultList();
-    }
-
-
-
 }

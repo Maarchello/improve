@@ -40,4 +40,8 @@ public class Cat {
         this.set = set;
     }
 
+    @Override
+    public String toString() {
+        return name+"";
+    }
 }
